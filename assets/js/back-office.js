@@ -29,6 +29,8 @@ productForm.addEventListener('submit', function (e) {
 
 
 
+
+
     fetch(url, {
         method: 'POST',
         body: JSON.stringify(newProduct),
@@ -40,9 +42,8 @@ productForm.addEventListener('submit', function (e) {
     
     .then((response) => {
         if (response.ok) {
-
-            const modal = document.createElement('div')
             alert('SALVATAGGIO COMPLETATO')
+            location.assign('./home.html')
 
         } else {
             alert('ERRORE NEL SALVATAGGIO');
@@ -58,5 +59,31 @@ productForm.addEventListener('submit', function (e) {
 });
 
 
+
+
+
+const productID = new URLSearchParams(location.search).get('productID')
+
+console.log('productID', productID)
+
+if (productID) {
+  fetch("https://striveschool-api.herokuapp.com/api/product" + productID)
+    .then((response) => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        throw new Error('errore nel recupero del singolo concerto')
+      }
+    })
+    .then((singleProduct) => {
+      console.log('Single Product', singleProduct)
+      document.getElementById('nameProduct').value = singleProduct.name
+      document.getElementById('description').value = singleProduct.description
+      document.getElementById('price').value = singleProduct.price
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 
 
